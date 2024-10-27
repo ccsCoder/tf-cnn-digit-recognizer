@@ -316,7 +316,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Append the new tempCanvas and set its id
     tempCanvas.id = "tempCanvas";
-    document.body.appendChild(tempCanvas); // This will show the processed image
+    // document.body.appendChild(tempCanvas); // This will show the processed image
 
     // Reshape to match MNIST input shape [1, 28, 28, 1]
     return tf.tensor(input).reshape([1, 28, 28, 1]);
