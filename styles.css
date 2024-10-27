@@ -23,14 +23,34 @@ body {
   align-items: center;
 }
 
+.quote {
+  color: #63635f;
+  line-height: 1.5;
+  font-size: 1.5rem;
+}
+
+.emphasis {
+  color: red;
+  font-size: 2rem;
+}
+
+.author {
+  font-size: 1.1rem;
+  text-align: right;
+  font-style: italic;
+}
+
 .recognized-digit {
-  height: 400px;
-  width: calc(100% - 400px);
   background-color: transparent;
   display: flex;
   justify-content: center;
-  align-items: center;
   font-size: 1.5rem;
+  flex-direction: column;
+  text-align: left;
+  background: #ededdd;
+  padding: 40px;
+  border-radius: 20px;
+  max-width: 60svw;
 }
 
 canvas {

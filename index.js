@@ -1,4 +1,23 @@
 import { MnistData } from "./data.js";
+import quotes from "./quotes.js";
+
+function setBackgroundWithText(time) {
+  const filtered = Object.keys(quotes).filter((key) =>
+    key.startsWith(`0${time}`)
+  );
+  const randomIndex = filtered[Math.floor(Math.random() * filtered.length)];
+  const finalQuote = quotes[randomIndex][0];
+  console.log(finalQuote);
+
+  const { time: textTime, prefix, book, author, suffix } = finalQuote;
+
+  const quoteHTML = `
+    <p class="quote">${prefix} <span class="emphasis">${textTime}</span> ${suffix}</p>
+    <p class="author">- ${author} in ${book}</p>
+  `;
+
+  document.querySelector(".recognized-digit").innerHTML = quoteHTML;
+}
 
 async function saveModel(model) {
   await model.save("localstorage://my-model");
@@ -87,6 +106,7 @@ async function train(model, data) {
     tab: "Model",
     styles: { height: "1000px" },
   };
+
   const fitCallbacks = tfvis.show.fitCallbacks(container, metrics);
 
   const BATCH_SIZE = 512;
@@ -151,21 +171,20 @@ const enableRecognition = () => {
 async function run() {
   const data = new MnistData();
   await data.load();
-  await showExamples(data);
 
   let model = await loadModel();
   if (!model) {
     model = getModel();
+    await showExamples(data);
     tfvis.show.modelSummary(
       { name: "Model Architecture", tab: "Model" },
       model
     );
     await train(model, data);
     await saveModel(model);
+    await showAccuracy(model, data);
+    await showConfusion(model, data);
   }
-
-  await showAccuracy(model, data);
-  await showConfusion(model, data);
 
   enableRecognition();
 }
@@ -246,6 +265,9 @@ document.addEventListener("DOMContentLoaded", function () {
     ctx.lineWidth = 12;
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
+
+    // clear the .recognized-digit element
+    document.querySelector(".recognized-digit").innerHTML = "";
   }
 
   async function preprocessCanvas() {
@@ -294,7 +316,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Append the new tempCanvas and set its id
     tempCanvas.id = "tempCanvas";
-    document.body.appendChild(tempCanvas); // This will show the processed image
+    // document.body.appendChild(tempCanvas); // This will show the processed image
 
     // Reshape to match MNIST input shape [1, 28, 28, 1]
     return tf.tensor(input).reshape([1, 28, 28, 1]);
@@ -306,19 +328,14 @@ document.addEventListener("DOMContentLoaded", function () {
       const tensor = await preprocessCanvas();
 
       const predictions = await model.predict(tensor).data();
-      // const formattedPrediction = predictions.map((p) => p.toFixed(4));
-      // console.log(formattedPrediction);
-
       console.log(predictions);
       console.log("Max = ", Math.max(...predictions));
 
-      // // Get the index of the highest confidence
+      // Get the index of the highest confidence
       const predictedClass = predictions.indexOf(Math.max(...predictions));
 
       console.log("prediction = ", predictedClass, classNames[predictedClass]);
-      document.querySelector(
-        ".recognized-digit"
-      ).textContent = `${predictedClass} - ${classNames[predictedClass]}`;
+      await setBackgroundWithText(predictedClass);
 
       // Free memory
       tensor.dispose();
