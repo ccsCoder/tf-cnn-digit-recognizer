@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Digit Recognition</title>
+    <link rel="stylesheet" href="styles.css" />
+    <!-- Import TensorFlow.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.0.0/dist/tf.min.js"></script>
+    <!-- Import tfjs-vis -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-vis@1.0.2/dist/tfjs-vis.umd.min.js"></script>
+    <!-- Import the data file -->
+    <script src="data.js" type="module"></script>
+    <script src="index.js" type="module"></script>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Training model, please wait...</h1>
+      <div class="canvas-container">
+        <canvas id="drawingCanvas" width="280" height="280"></canvas>
+        <div class="recognized-digit">Waiting...</div>
+      </div>
+      <div class="controls">
+        <button id="clearBtn" disabled>Clear</button>
+        <button id="recognizeBtn" disabled>Recognize</button>
+      </div>
+    </div>
+  </body>
+</html>
