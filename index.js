@@ -241,6 +241,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function clearCanvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "white";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.lineWidth = 12;
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
@@ -252,6 +254,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const tempCtx = tempCanvas.getContext("2d");
     tempCanvas.width = 28;
     tempCanvas.height = 28;
+
+    // Clear the tempCanvas before drawing
+    tempCtx.clearRect(0, 0, tempCanvas.width, tempCanvas.height);
 
     // Scale down the image
     tempCtx.drawImage(canvas, 0, 0, 280, 280, 0, 0, 28, 28);
@@ -280,6 +285,15 @@ document.addEventListener("DOMContentLoaded", function () {
       data[i + 3] = 255; // A
     }
     tempCtx.putImageData(imageData, 0, 0);
+
+    // Remove the old tempCanvas if it exists
+    const oldTempCanvas = document.getElementById("tempCanvas");
+    if (oldTempCanvas) {
+      document.body.removeChild(oldTempCanvas);
+    }
+
+    // Append the new tempCanvas and set its id
+    tempCanvas.id = "tempCanvas";
     document.body.appendChild(tempCanvas); // This will show the processed image
 
     // Reshape to match MNIST input shape [1, 28, 28, 1]
